@@ -1,0 +1,87 @@
+<html>
+	<head>
+		<title>MP2P - Decrypt</title>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+		<script src="js/jquery.dnd-file-upload.js" ></script>
+		<script src="js/jquery.client.js" ></script>
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		
+		
+		<script src="utils.js" ></script>
+		<script>
+		
+		var PASSWORD = "changeme";
+		
+		function myPopup(url,windowname,w,h,x,y){
+			window.open(url,windowname,"resizable=no,toolbar=no,scrollbars=no,menubar=no,status=no,directories=no,width="+w+",height="+h+",left="+x+",top="+y+"");
+		}
+		
+		function populateIframe(id, path){
+			var ifrm = document.getElementById(id);
+			ifrm.src = "download.php?file="+path;
+		}
+		
+		function handleRequest(req) {
+			alert(req.responseText);
+		}
+		
+		function passChange(){
+			PASSWORD = $('#password').val();
+		}
+		
+			$(document).ready(function(){
+				document.getElementById('password').addEventListener('change', passChange, false);
+				
+				$('#nav-all').hide();
+
+				$.fn.dropzone.uploadStarted = function(fileIndex, file){
+					$("#filename_details").html(".."+file.fileName.substr(-25));
+					$("#bar-style").attr({class: 'progress progress-striped active'});
+					$('#nav-all').fadeIn();
+				};
+				$.fn.dropzone.uploadFinished = function(fileIndex, file, duration){
+					//getReadableFileSizeString(file.fileSize)
+					$("#bar").css({
+						'width': '100%',
+					});
+					$("#bar-style").attr({class: 'progress progress-striped'});
+				};
+				$.fn.dropzone.fileUploadProgressUpdated = function(fileIndex, file, newProgress){
+					$("#bar").css("width", newProgress + "%");
+				};
+				$.fn.dropzone.fileUploadSpeedUpdated = function(fileIndex, file, KBperSecond){
+
+					//dive.html( getReadableSpeedString(KBperSecond) );
+				};
+				$.fn.dropzone.newFilesDropped = function(){
+				};
+				$("#dropzone").dropzone({
+					url : "upload.php",
+					method : "POST",
+					printLogs : false,
+					uploadRateRefreshTime : 500,
+					numConcurrentUploads : 2
+				});
+				
+			});
+		</script>
+	</head>
+	<body style="background-image: url(img/grid-18px-masked.png);">
+		<div style="padding-left:10px; padding-top:5px">Password:<input id="password" ype="text" name="password" style="height:25px; margin:10px; width:200px" value="changeme" onkeyup="passChange()"/></div>
+		<div style="width: 270px; padding-left:10px; padding-top:0px" >
+			<div id="dropzone" style="background-color: grey; width: 100%; height: 200px; border-style: dashed; border-color: black; background-color:rgba(0,0,0,0.3); text-align: center;"><div style="padding-top:90px"><h3>Drop Database File</h3></div></div>
+			<div id="dropzone-info" style="width: 250px;" ></div>
+		</div>
+			
+		<div class="navbar" style="position:absolute; top:210px; padding-left:5px;" id="nav-all">
+			<div class="navbar-inner" style="width: 250px; height:80px">
+				<div class="container" style="padding-top:5px">
+					<h3 id="filename_details">Filename</h3>
+					<div class='progress progress-striped active' id="bar-style"><div class='bar' id='bar'></div></div>
+				</div>
+			</div>
+		</div>
+		
+		<iframe id="download" style="display:none"></iframe>
+	</body>
+</html>
