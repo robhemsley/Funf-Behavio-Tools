@@ -116,10 +116,16 @@
 			upload.addEventListener("progress", progress, false);
 			upload.addEventListener("load", load, false);
 
+			if (file.fileName != undefined){
+				fileName = file.fileName;
+			}else{
+				fileName = file.name;
+			}
+
 			xhr.open(opts.method, opts.url);
 			xhr.setRequestHeader("Cache-Control", "no-cache");
 			xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-			//xhr.setRequestHeader("X-File-Name", file.fileName);
+			//xhr.setRequestHeader("X-File-Name", fileName);
 			//xhr.setRequestHeader("X-File-Size", file.fileSize);
 			//xhr.setRequestHeader("Content-Type", "multipart/form-data-");
 			
@@ -127,7 +133,9 @@
 			    if (xhr.readyState == 4) {
 			        if(xhr.responseText == 'true'){
 			        	setTimeout("$('#nav-all').fadeOut();", 2000);
-						populateIframe('download', file.fileName);
+			        	console.log(file);
+			        	populateIframe('download', fileName);
+						
 			        }else{
 			        	alert("Error Decrypting File");				       	setTimeout("$('#nav-all').fadeOut();", 1000);
 			        }

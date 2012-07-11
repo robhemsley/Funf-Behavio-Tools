@@ -35,12 +35,16 @@
 				$('#nav-all').hide();
 
 				$.fn.dropzone.uploadStarted = function(fileIndex, file){
-					$("#filename_details").html(".."+file.fileName.substr(-25));
+					if (file.fileName != undefined){
+						fileName = file.fileName;
+					}else{
+						fileName = file.name;
+					}
+					$("#filename_details").html(".."+fileName.substr(-25));
 					$("#bar-style").attr({class: 'progress progress-striped active'});
 					$('#nav-all').fadeIn();
 				};
 				$.fn.dropzone.uploadFinished = function(fileIndex, file, duration){
-					//getReadableFileSizeString(file.fileSize)
 					$("#bar").css({
 						'width': '100%',
 					});
@@ -50,8 +54,6 @@
 					$("#bar").css("width", newProgress + "%");
 				};
 				$.fn.dropzone.fileUploadSpeedUpdated = function(fileIndex, file, KBperSecond){
-
-					//dive.html( getReadableSpeedString(KBperSecond) );
 				};
 				$.fn.dropzone.newFilesDropped = function(){
 				};
